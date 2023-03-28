@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: MyApp-iOS
-          path: app.ipa
+          path: build/ios/iphoneos/app.ipa
 
       # Package the app into an IPA file
 
