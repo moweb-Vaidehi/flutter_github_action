@@ -73,6 +73,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: MyApp-iOS
+          path: .
       # Uploads the app to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -80,7 +81,7 @@ jobs:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          file: /home/runner/work/flutter_github_action/flutter_github_action/MyApp-iOS.ipa
+          file: ./MyApp-iOS.ipa
 
 
           #      - name: Push to Releases
