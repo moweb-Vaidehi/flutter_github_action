@@ -43,7 +43,6 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
-          codesign -f -s "iPhone Distribution: Your Name" --entitlements Runner.app/Runner.app.xcent Payload/Runner.app
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v2
         with:
