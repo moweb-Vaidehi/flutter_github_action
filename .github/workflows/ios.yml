@@ -13,7 +13,7 @@ jobs:
     # Name of the job
     name: Run Flutter Test and analyze
     # Runs on an Ubuntu virtual machine
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       # Sets up the Flutter SDK
@@ -51,12 +51,12 @@ jobs:
           cd ..
           zip -r app.ipa Payload
 
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/ios/iphones/app.ipa"
-          tag: ios.v1.0.${{github.run_number}}
-          token: ${{secrets.TOKEN}}
+#      - name: Push to Releases
+#        uses: ncipollo/release-action@v1
+#        with:
+#          artifacts: "build/ios/iphones/app.ipa"
+#          tag: ios.v1.0.${{github.run_number}}
+#          token: ${{secrets.TOKEN}}
 
       # Uploads the app to Firebase App Distribution
       - name: Upload to Firebase App Distribution
