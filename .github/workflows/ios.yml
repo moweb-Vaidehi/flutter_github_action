@@ -43,6 +43,7 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
+          codesign -f -s "iPhone Distribution: Your Name" --entitlements Runner.app/Runner.app.xcent Payload/Runner.app
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v2
         with:
@@ -72,7 +73,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: MyApp-iOS
-          path: .
 
       - name: List Contents of Working Directory
         run: ls -al
@@ -83,7 +83,7 @@ jobs:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          file: /home/runner/work/flutter_github_action/flutter_github_action/app.ipa
+          file: MyApp-iOS/app.ipa
 
 
           #      - name: Push to Releases
