@@ -78,7 +78,7 @@ jobs:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          file: build/ios/iphoneos/app.ipa
+          file: MyApp-iOS.ipa
 
 
           #      - name: Push to Releases
