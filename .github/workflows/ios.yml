@@ -67,6 +67,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+      - name: List Contents of Working Directory
+        run: ls -al
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
