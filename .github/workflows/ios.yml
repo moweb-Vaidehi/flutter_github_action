@@ -12,7 +12,6 @@ jobs:
   flutter_test:
     # Name of the job
     name: Run Flutter Test and analyze
-    # Runs on an Ubuntu virtual machine
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -60,7 +59,7 @@ jobs:
 
       # Uploads the app to Firebase App Distribution
       - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: wzieba/Firebase-Distribution-Github-Action@v2
         with:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
