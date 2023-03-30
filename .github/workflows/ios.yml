@@ -36,12 +36,11 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: |
-          flutter build ios --no-codesign 
+          flutter build ios --build-name="1.0.0" --build-number=$GITHUB_RUN_NUMBER
           mkdir ~/Desktop/Payload
           cp -r build/ios/iphoneos/Runner.app ~/Desktop/Payload/
           cd ~/Desktop
           zip -r app.ipa Payload
-
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v2
