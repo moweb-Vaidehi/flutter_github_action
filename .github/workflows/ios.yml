@@ -37,9 +37,9 @@ jobs:
       - run: flutter clean
       - run: |
           flutter build ios --no-codesign --build-name="1.0.0" --build-number=$GITHUB_RUN_NUMBER
-          mkdir ios/Payload
-          cp -R build/ios/iphoneos/Runner.app ios/Payload/
-          cd ios
+          mkdir ~/Desktop/Payload
+          cp -r build/ios/iphoneos/Runner.app ~/Desktop/Payload/
+          cd ~/Desktop
           zip -r app.ipa Payload
 
 
@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: MyApp-iOS
-          path: ios/app.ipa
+          path: ~/Desktop/app.ipa
 
 
   distribute-ios:
