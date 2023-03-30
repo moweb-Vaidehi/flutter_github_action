@@ -65,7 +65,7 @@ jobs:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          ipa_path: 'build/ios/archive/Runner.xcarchive/Products/Applications/Runner.ipa'
+          ipa_path: 'build/ios/iphoneos/Runner.ipa'
 
 
           #      - name: Push to Releases
