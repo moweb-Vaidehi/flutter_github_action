@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: MyApp-iOS
-          path: build/ios/app.ipa
+          path: ios/app.ipa
 
 
   distribute-ios:
