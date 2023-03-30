@@ -36,18 +36,11 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: |
-          flutter build ios --no-codesign 
-          cd build/ios/iphoneos
-          rm -rf tmp_payload
-          mkdir tmp_payload
-          cd tmp_payload
-          mkdir Payload
-          cp -r ~/Library/Developer/Xcode/DerivedData/maxAPP-dhyiitrlgrlsxpfipzdzwqkkqhiv/Build/Products/Debug-iphoneos/maxAPP.app Payload/maxAPP.app
-          zip -r upload_this.ipa Payload
-          rm -rf Payload
-          mv upload_this.ipa ../upload_this.ipa
-          cd ..
-          rm -rf tmp_payload
+          flutter build ios --no-codesign --build-name="1.0.0" --build-number=$GITHUB_RUN_NUMBER
+          mkdir ios/Payload
+          cp -R build/ios/iphoneos/Runner.app ios/Payload/
+          cd ios
+          zip -r app.ipa Payload
 
 
       - name: Upload IPA artifact
