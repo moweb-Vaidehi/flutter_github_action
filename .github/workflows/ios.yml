@@ -38,11 +38,11 @@ jobs:
       - run: |
           flutter build ios --release --no-codesign
 
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: MyApp-iOS
-          path: ~/Desktop/app.ipa
+#      - name: Upload IPA artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: MyApp-iOS
+#          path: ~/Desktop/app.ipa
 
 
   distribute-ios:
@@ -53,10 +53,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: MyApp-iOS
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: MyApp-iOS
 
       # Uploads the app to Firebase App Distribution
       - name: Upload to Firebase App Distribution
