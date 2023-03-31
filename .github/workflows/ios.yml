@@ -70,7 +70,7 @@ jobs:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          file: MyApp-iOS/Runner.ipa
+          file: /home/runner/work/flutter_github_action/flutter_github_action/Runner.ipa
 
 
           #      - name: Push to Releases
