@@ -35,8 +35,13 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter clean
-      - run: |
-          flutter build ios --release --no-codesign
+      - run: flutter build ios --release --no-codesign
+      - run: cd build/ios/iphoneos
+      - run: ls
+      - run: mkdir -p build/ios/iphoneos/Payload
+      - run: mv build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload
+      - run: zip -r build/ios/iphoneos/Runner.ipa build/ios/iphoneos/Payload
+      - run: rm -rf /build/ios/iphoneos/Payload
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v2
@@ -65,7 +70,7 @@ jobs:
           appId: ${{secrets.FIREBASE_IOS_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           groups: testers
-          file: Runner.ipa
+          file: MyApp-iOS/Runner.ipa
 
 
           #      - name: Push to Releases
