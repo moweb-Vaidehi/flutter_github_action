@@ -1,82 +1,69 @@
-# The name of your workflow
-name: IOS
+name: Build and Distribute iOS App
 
-# When should this workflow run?
 on:
-  pull_request:
+  push:
     branches:
       - master
 
-# Jobs to perform in this workflow
 jobs:
-  flutter_test:
-    # Name of the job
-    name: Run Flutter Test and analyze
+  build-and-distribute-ios:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      # Sets up the Flutter SDK
-      - uses: subosito/flutter-action@v2
+
+      # Set up the Flutter environment
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-      # Gets the dependencies and builds the app
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+          flutter-version: "3.7.0"
 
-  build_ios:
-    name: Build Flutter(ios)
-    needs: [flutter_test]
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
+      # Install required tools
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod repo update
+      - name: Select Xcode version
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      # Build the app
+      - name: Build iOS app
+        run: flutter build ios --release --no-codesign
+
+      # Create a temporary directory for the signed IPA file
+      - name: Create temporary directory
+        run: mkdir -p build/ios/ipa
+
+      - name: Build resolve Swift dependencies
+        run: xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
+
+      # ss
+      # - name: Build xArchive
+      #   run: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=TUBBTSR2F6 -sdk'iphones' -destination'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE=7f0027f4a31736ebc3bb0cabc819b514607481b2 clean archive CODE_SIGN_IDENTITY= 'Apple Distribution:Jainam Shah'
+
+      # - name: Export ipa
+      #   # run: xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
+      #   run: xcodebuild -exportArchive -archivePath ./Build/demopro.xcarchive -exportPath ./Build/demopro.ipa -exportWithOriginalSigningIdentity
+
+      - name: Publish iOS Artefacts
+        uses: actions/upload-artifact@v1
         with:
-          channel: 'stable'
-      - run: flutter pub get
-      - run: flutter clean
-      - run: flutter build ios --release --no-codesign
-      - run: cd build/ios/iphoneos
-      - run: ls
-      - run: mkdir -p build/ios/iphoneos/Payload
-      - run: mv build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload
-      - run: zip -r build/ios/iphoneos/Runner.ipa build/ios/iphoneos/Payload
-      - run: rm -rf /build/ios/iphoneos/Payload
+          name: release-ios
+          path: ios
 
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: MyApp-iOS
-          path: build/ios/iphoneos/Runner.ipa
+      # Sign the IPA file using Xcode
+      - name: Sign iOS app with Xcode
+        run: xcodebuild -exportArchive -archivePath app.xcarchive -exportPath ios -exportOptionsPlist ios/Runner/ExportOptions.plist
 
+      # - name: Build xArchive
+      #   run: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=
+      #       # xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=YOUR_TEAM_ID -sdk 'iphoneos' -destination 'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE=YOUR_UUID clean archive CODE_SIGN_IDENTITY="Apple Distribution: Damien Aicheh"
 
-  distribute-ios:
-    needs: build_ios # This is important
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: MyApp-iOS
-      # Uploads the app to Firebase App Distribution
+      # Upload the signed IPA file to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{secrets.FIREBASE_IOS_ID}}
+          appId: ${{secrets.FIREBASE_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
-          groups: testers
-          file: /home/runner/work/flutter_github_action/flutter_github_action/Runner.ipa
-
-
-          #      - name: Push to Releases
-          #        uses: ncipollo/release-action@v1
-          #        with:
-          #          artifacts: "build/ios/iphones/app.ipa"
-          #          tag: ios.v1.0.${{github.run_number}}
-          #          token: ${{secrets.TOKEN}}
-
-
+          releaseNotes: "This is a release for version 1.0"
+          groups: "testers"
+          apkPath: "build-output/ios/*.ipa"
