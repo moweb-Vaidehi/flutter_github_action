@@ -34,9 +34,9 @@ jobs:
         run: mkdir -p build/ios/ipa
 
       - name: Build resolve Swift dependencies
-        run:
+        run: xcodebuild -workspace Runner.xcworkspace -scheme myApp -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $PWD/build/myApp.xcarchive
+
         #xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
-xcodebuild -workspace Runner.xcworkspace -scheme myApp -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $PWD/build/myApp.xcarchive
       # ss
       # - name: Build xArchive
       #   run: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=TUBBTSR2F6 -sdk'iphones' -destination'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE=7f0027f4a31736ebc3bb0cabc819b514607481b2 clean archive CODE_SIGN_IDENTITY= 'Apple Distribution:Jainam Shah'
