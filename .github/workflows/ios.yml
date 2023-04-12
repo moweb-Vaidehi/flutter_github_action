@@ -1,7 +1,7 @@
 name: Build and Distribute iOS App
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -33,16 +33,12 @@ jobs:
       - name: Create temporary directory
         run: mkdir -p build/ios/ipa
 
-      - name: Build resolve Swift dependencies
-        run: xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
+      - name: Build xArchive
+        run: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=VWBJGEQ965 -sdk'iphones' -destination'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE=7f0027f4a31736ebc3bb0cabc819b514607481b2 clean archive CODE_SIGN_IDENTITY= 'Apple Distribution:Jainam Shah'
 
-      # ss
-      # - name: Build xArchive
-      #   run: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=TUBBTSR2F6 -sdk'iphones' -destination'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE=7f0027f4a31736ebc3bb0cabc819b514607481b2 clean archive CODE_SIGN_IDENTITY= 'Apple Distribution:Jainam Shah'
-
-      # - name: Export ipa
-      #   # run: xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
-      #   run: xcodebuild -exportArchive -archivePath ./Build/demopro.xcarchive -exportPath ./Build/demopro.ipa -exportWithOriginalSigningIdentity
+      - name: Export ipa
+        # run: xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
+        run: xcodebuild -exportArchive -archivePath ./Build/demopro.xcarchive -exportPath ./Build/demopro.ipa -exportWithOriginalSigningIdentity
 
       - name: Publish iOS Artefacts
         uses: actions/upload-artifact@v1
@@ -50,9 +46,15 @@ jobs:
           name: release-ios
           path: ios
 
-      # Sign the IPA file using Xcode
-      - name: Sign iOS app with Xcode
-        run: xcodebuild -exportArchive -archivePath app.xcarchive -exportPath ios -exportOptionsPlist ios/Runner/ExportOptions.plist
+      #      - name: Build resolve Swift dependencies
+      #        run: xcodebuild -workspace Runner.xcworkspace -scheme myApp -sdk iphoneos -configuration AppStoreDistribution archive -archivePath $PWD/build/myApp.xcarchive
+
+      #xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
+      # ss
+
+#      # Sign the IPA file using Xcode
+#      - name: Sign iOS app with Xcode
+#        run: xcodebuild -exportArchive -archivePath app.xcarchive -exportPath ios -exportOptionsPlist ios/Runner/ExportOptions.plist
 
       # - name: Build xArchive
       #   run: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM=
